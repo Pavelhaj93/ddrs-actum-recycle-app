@@ -15,4 +15,36 @@ model Bottle {
     id      String  @id @default(auto()) @map("_id") @db.ObjectId
     code    String
     scanned Boolean @default(false)
+    User    User?   @relation(fields: [userId], references: [id])
+    userId  String? @db.ObjectId
+}
+
+model User {
+    id             String     @id @default(auto()) @map("_id") @db.ObjectId
+    email          String     @unique
+    hashedPassword String?
+    createdAt      DateTime?  @default(now())
+    updatedAt      DateTime?  @updatedAt
+    Bottle         Bottle[]
+    Coupon         Coupon[]
+    Feedback       Feedback[]
+}
+
+model Coupon {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    amount    Int
+    available Boolean  @default(true)
+    usedAt    DateTime @updatedAt
+    location  String
+    User      User?    @relation(fields: [userId], references: [id])
+    userId    String?  @db.ObjectId
+}
+
+model Feedback {
+    id           String  @id @default(auto()) @map("_id") @db.ObjectId
+    rating       String
+    workedWell   String
+    wouldImprove String
+    User         User?   @relation(fields: [userId], references: [id])
+    userId       String? @db.ObjectId
 }
